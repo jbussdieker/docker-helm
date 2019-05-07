@@ -1,12 +1,15 @@
 #!groovy
+latest = "2.13.1"
+stable = "2.13.1"
+
 properties([
   parameters([
-    string(defaultValue: '2.11.0', description: 'Helm Version', name: 'HelmVersion')
+    string(defaultValue: '2.13.1', description: 'Version', name: 'Version')
   ])
 ])
 
 node {
-  helmVersion = params.HelmVersion
+  helmVersion = params.Version
   credentialsId = 'docker-hub-credentials'
 
   stage('clone') {
@@ -26,6 +29,10 @@ node {
   stage('publish') {
     docker.withRegistry("", credentialsId) {
       image.push()
+      if (helmVersion == latest)
+        image.push('latest')
+      else if (helmVersion == stable)
+        image.push('stable')
     }
   }
 }
