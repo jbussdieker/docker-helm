@@ -31,7 +31,7 @@ node {
       image.push()
       if (helmVersion == latest)
         image.push('latest')
-      else if (helmVersion == stable)
+      if (helmVersion == stable)
         image.push('stable')
     }
   }
